@@ -1,3 +1,5 @@
+using LostAndFoundAPI.Application.Repositories;
+using LostAndFoundAPI.Application.Repositories.MySqlRepository;
 using LostAndFoundAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -5,8 +7,18 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-
 builder.Services.AddOpenApi();
+builder.Services.AddScoped<IFoundItemRepository, MySqlFoundItemRepository>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 var connectionString = builder.Configuration.GetConnectionString("mySqlDb");
 if (string.IsNullOrWhiteSpace(connectionString))
@@ -18,14 +30,14 @@ builder.Services.AddDbContext<MySqlDbContext>(options =>
 
 var app = builder.Build();
 
-app.MapControllers();
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
 
+app.UseCors("AllowFrontend");
+app.MapControllers();
 app.UseAuthorization();
 
 app.Run();
