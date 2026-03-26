@@ -22,4 +22,11 @@ public class MySqlFoundItemRepository : IFoundItemRepository
     {
         return await _context.FoundItems.FindAsync(id);
     }
+
+    public async Task<FoundItem> AddAsync(FoundItem item)
+    {
+        _context.FoundItems.Add(item);
+        await _context.SaveChangesAsync();
+        return item;
+    }
 }

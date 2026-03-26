@@ -32,4 +32,11 @@ public class FoundItemsController : ControllerBase
 
         return Ok(item);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<FoundItem>> Create([FromBody] FoundItem newItem)
+    {
+        var createdItem = await _repository.AddAsync(newItem);
+        return CreatedAtAction(nameof(GetById), new { id = createdItem.Id }, createdItem);
+    }
 }
