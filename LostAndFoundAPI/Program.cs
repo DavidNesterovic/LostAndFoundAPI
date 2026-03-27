@@ -1,6 +1,7 @@
 using LostAndFoundAPI.Application.Repositories;
 using LostAndFoundAPI.Application.Repositories.MySqlRepository;
 using LostAndFoundAPI.Data;
+using LostAndFoundAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -16,7 +17,8 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -25,8 +27,20 @@ if (string.IsNullOrWhiteSpace(connectionString))
     throw new InvalidOperationException("ConnectionStrings:mySqlDb is missing.");
 
 builder.Services.AddDbContext<MySqlDbContext>(options =>
-    options.UseMySQL(connectionString)
-);
+    options.UseMySQL(connectionString));
+
+builder.Services.AddAuthorization();
+
+builder.Services
+    .AddIdentityApiEndpoints<ApplicationUser>(options =>
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 6;
+    })
+    .AddEntityFrameworkStores<MySqlDbContext>();
 
 var app = builder.Build();
 
@@ -37,7 +51,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowFrontend");
-app.MapControllers();
+
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
+app.MapIdentityApi<ApplicationUser>();
 
 app.Run();

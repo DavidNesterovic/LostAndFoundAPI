@@ -1,5 +1,6 @@
 ﻿using LostAndFoundAPI.Application.Repositories;
 using LostAndFoundAPI.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LostAndFoundAPI.Controllers;
@@ -34,6 +35,7 @@ public class FoundItemsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<FoundItem>> Create([FromBody] FoundItem newItem)
     {
         var createdItem = await _repository.AddAsync(newItem);

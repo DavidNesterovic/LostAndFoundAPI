@@ -1,15 +1,16 @@
 ﻿using LostAndFoundAPI.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LostAndFoundAPI.Data;
 
-public class MySqlDbContext : DbContext
+public class MySqlDbContext : IdentityDbContext<ApplicationUser>
 {
     public MySqlDbContext(DbContextOptions<MySqlDbContext> options)
         : base(options)
     {
     }
-    
+
     public DbSet<FoundItem> FoundItems => Set<FoundItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
