@@ -1,8 +1,10 @@
 using LostAndFoundAPI.Application.Repositories;
 using LostAndFoundAPI.Application.Repositories.MySqlRepository;
 using LostAndFoundAPI.Data;
+using LostAndFoundAPI.Data.Seeders;
 using LostAndFoundAPI.Domain.Entities;
 using LostAndFoundAPI.Hubs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -37,12 +39,13 @@ builder.Services.AddAuthorization();
 builder.Services
     .AddIdentityApiEndpoints<ApplicationUser>(options =>
     {
-        options.Password.RequireDigit = false;
+        options.Password.RequireDigit = true;
         options.Password.RequireLowercase = false;
-        options.Password.RequireUppercase = false;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequiredLength = 6;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequiredLength = 12;
     })
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<MySqlDbContext>();
 
 var app = builder.Build();
@@ -61,5 +64,11 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<FoundItemsHub>("/hubs/found-items");
 app.MapIdentityApi<ApplicationUser>();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await IdentitySeeder.SeedAsync(services);
+}
 
 app.Run();
