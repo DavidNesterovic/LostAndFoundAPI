@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<IFoundItemRepository, MySqlFoundItemRepository>();
+builder.Services.AddScoped<LostAndFoundAPI.Application.Repositories.IFoundItemRepository, MySqlFoundItemRepository>();
 builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
