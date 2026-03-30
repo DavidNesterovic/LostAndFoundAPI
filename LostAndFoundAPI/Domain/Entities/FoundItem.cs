@@ -10,6 +10,6 @@ public class FoundItem
     public string Color { get; set; } = null!;
     public string Location { get; set; } = null!;
     public string? ImageUrl { get; set; }
-    public string ContactName { get; set; } = null!;
-    public string ContactEmail { get; set; } = null!;
+    public string? UserId { get; set; }
+    public string ContactEmail { get; set; } = string.Empty;
 }

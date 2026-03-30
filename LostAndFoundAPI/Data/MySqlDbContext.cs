@@ -12,13 +12,13 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<FoundItem> FoundItems => Set<FoundItem>();
-    
+
     public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         modelBuilder.Entity<Category>().HasData(
             new Category { Id = 1, Name = "Elektronik" },
             new Category { Id = 2, Name = "Kleidung" },
@@ -38,7 +38,6 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
                 Color = "Schwarz",
                 Location = "Bahnhof Dornbirn",
                 ImageUrl = null,
-                ContactName = "Max Mustermann",
                 ContactEmail = "max.mustermann@mail.at"
             },
             new FoundItem
@@ -50,7 +49,6 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
                 Color = "Blau",
                 Location = "FH Vorarlberg",
                 ImageUrl = "https://picsum.photos/seed/iphone/800/600",
-                ContactName = "Laura Berger",
                 ContactEmail = "laura.berger@mail.at"
             },
             new FoundItem
@@ -62,7 +60,6 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
                 Color = "Braun",
                 Location = "Marktplatz Dornbirn",
                 ImageUrl = "https://picsum.photos/seed/keys/800/600",
-                ContactName = "Thomas Huber",
                 ContactEmail = "thomas.huber@mail.at"
             },
             new FoundItem
@@ -74,7 +71,6 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
                 Color = "Rot",
                 Location = "Stadtbus Dornbirn",
                 ImageUrl = "https://picsum.photos/seed/backpack/800/600",
-                ContactName = "Sabrina König",
                 ContactEmail = "sabrina.koenig@mail.at"
             },
             new FoundItem
@@ -86,7 +82,6 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
                 Color = "Gold",
                 Location = "Messepark Dornbirn",
                 ImageUrl = "https://picsum.photos/seed/watch/800/600",
-                ContactName = "Daniel Weiss",
                 ContactEmail = "daniel.weiss@mail.at"
             },
             new FoundItem
@@ -98,7 +93,6 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
                 Color = "Grau",
                 Location = "Birkenwiese Stadion",
                 ImageUrl = "https://picsum.photos/seed/hoodie/800/600",
-                ContactName = "Julia Fink",
                 ContactEmail = "julia.fink@mail.at"
             },
             new FoundItem
@@ -110,7 +104,6 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
                 Color = "Weiß",
                 Location = "Bahnhof Dornbirn",
                 ImageUrl = "https://picsum.photos/seed/airpods/800/600",
-                ContactName = "Markus Leitner",
                 ContactEmail = "markus.leitner@mail.at"
             },
             new FoundItem
@@ -122,7 +115,6 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
                 Color = "Blau",
                 Location = "Stadtgarten Dornbirn",
                 ImageUrl = "https://picsum.photos/seed/gloves/800/600",
-                ContactName = "Anna Müller",
                 ContactEmail = "anna.mueller@mail.at"
             },
             new FoundItem
@@ -134,7 +126,6 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
                 Color = "Schwarz",
                 Location = "Innenstadt Dornbirn",
                 ImageUrl = "https://picsum.photos/seed/wallet/800/600",
-                ContactName = "Patrick Meier",
                 ContactEmail = "patrick.meier@mail.at"
             },
             new FoundItem
@@ -146,11 +137,10 @@ public class MySqlDbContext : IdentityDbContext<ApplicationUser>
                 Color = "Dunkelgrau",
                 Location = "FH Vorarlberg",
                 ImageUrl = "https://picsum.photos/seed/laptopbag/800/600",
-                ContactName = "Nina Schmid",
                 ContactEmail = "nina.schmid@mail.at"
             }
         );
-        
+
         modelBuilder.Entity<FoundItem>()
             .HasOne(f => f.Category)
             .WithMany(c => c.FoundItems)

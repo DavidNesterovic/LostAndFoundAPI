@@ -5,6 +5,7 @@ using LostAndFoundAPI.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 
 namespace LostAndFoundAPI.Controllers;
 
@@ -48,6 +49,9 @@ public class FoundItemsController : ControllerBase
     [Authorize]
     public async Task<ActionResult<FoundItemDto>> Create([FromBody] CreateFoundItemDto dto)
     {
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var currentUserEmail = User.FindFirstValue(ClaimTypes.Email) ?? User.Identity?.Name ?? "keine-email@angegeben.de";
+
         var newItem = new FoundItem
         {
             Title = dto.Title,
@@ -55,9 +59,10 @@ public class FoundItemsController : ControllerBase
             Color = dto.Color,
             Location = dto.Location,
             ImageUrl = dto.ImageUrl,
-            ContactName = dto.ContactName,
-            ContactEmail = dto.ContactEmail,
-            CategoryId = dto.CategoryId
+            CategoryId = dto.CategoryId,
+
+            UserId = currentUserId,
+            ContactEmail = currentUserEmail
         };
 
         var createdItem = await _repository.AddAsync(newItem);
@@ -78,8 +83,8 @@ public class FoundItemsController : ControllerBase
             Color = item.Color,
             Location = item.Location,
             ImageUrl = item.ImageUrl,
-            ContactName = item.ContactName,
             ContactEmail = item.ContactEmail,
+            UserId = item.UserId,
             CategoryId = item.CategoryId,
             CategoryName = item.Category.Name
         };

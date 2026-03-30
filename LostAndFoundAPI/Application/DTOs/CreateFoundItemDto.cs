@@ -7,7 +7,5 @@ public class CreateFoundItemDto
     public string Color { get; set; } = null!;
     public string Location { get; set; } = null!;
     public string? ImageUrl { get; set; }
-    public string ContactName { get; set; } = null!;
-    public string ContactEmail { get; set; } = null!;
     public int CategoryId { get; set; }
 }
