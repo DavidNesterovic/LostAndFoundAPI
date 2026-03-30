@@ -24,9 +24,9 @@ public class FoundItemsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<FoundItemDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<FoundItemDto>>> GetAll([FromQuery] int? limit)
     {
-        var items = await _repository.GetAllAsync();
+        var items = await _repository.GetAllAsync(limit);
 
         var result = items.Select(MapToDto).ToList();
 

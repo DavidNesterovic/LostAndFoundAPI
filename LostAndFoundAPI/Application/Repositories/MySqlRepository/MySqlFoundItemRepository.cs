@@ -13,11 +13,19 @@ public class MySqlFoundItemRepository : IFoundItemRepository
         _context = context;
     }
 
-    public async Task<List<FoundItem>> GetAllAsync()
+    public async Task<List<FoundItem>> GetAllAsync(int? limit = null)
     {
-        return await _context.FoundItems
+        var query = _context.FoundItems
             .Include(f => f.Category)
-            .ToListAsync();
+            .OrderByDescending(f => f.Id)
+            .AsQueryable();
+
+        if (limit.HasValue)
+        {
+            query = query.Take(limit.Value);
+        }
+
+        return await query.ToListAsync();
     }
 
     public async Task<FoundItem?> GetByIdAsync(int id)
