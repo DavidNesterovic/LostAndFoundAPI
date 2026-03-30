@@ -2,6 +2,7 @@ using LostAndFoundAPI.Application.Repositories;
 using LostAndFoundAPI.Application.Repositories.MySqlRepository;
 using LostAndFoundAPI.Data;
 using LostAndFoundAPI.Domain.Entities;
+using LostAndFoundAPI.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IFoundItemRepository, MySqlFoundItemRepository>();
+builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -56,6 +58,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<FoundItemsHub>("/hubs/found-items");
 app.MapIdentityApi<ApplicationUser>();
 
 app.Run();

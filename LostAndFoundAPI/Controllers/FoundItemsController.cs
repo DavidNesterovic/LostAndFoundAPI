@@ -1,7 +1,9 @@
 ﻿using LostAndFoundAPI.Application.Repositories;
 using LostAndFoundAPI.Domain.Entities;
+using LostAndFoundAPI.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace LostAndFoundAPI.Controllers;
 
@@ -10,10 +12,12 @@ namespace LostAndFoundAPI.Controllers;
 public class FoundItemsController : ControllerBase
 {
     private readonly IFoundItemRepository _repository;
+    private readonly IHubContext<FoundItemsHub> _hubContext;
 
-    public FoundItemsController(IFoundItemRepository repository)
+    public FoundItemsController(IFoundItemRepository repository, IHubContext<FoundItemsHub> hubContext)
     {
         _repository = repository;
+        _hubContext = hubContext;
     }
 
     [HttpGet]
@@ -39,6 +43,9 @@ public class FoundItemsController : ControllerBase
     public async Task<ActionResult<FoundItem>> Create([FromBody] FoundItem newItem)
     {
         var createdItem = await _repository.AddAsync(newItem);
+        
+        await _hubContext.Clients.All.SendAsync("FoundItemCreated", createdItem);
+        
         return CreatedAtAction(nameof(GetById), new { id = createdItem.Id }, createdItem);
     }
 }
